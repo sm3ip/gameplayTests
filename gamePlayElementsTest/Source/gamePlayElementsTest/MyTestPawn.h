@@ -15,7 +15,7 @@ class GAMEPLAYELEMENTSTEST_API AMyTestPawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AMyTestPawn();
-	// capsule body
+	// capsule body todo maybe try blueprintreadwrite
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "body", meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* body;
 
