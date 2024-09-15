@@ -15,15 +15,31 @@ class GAMEPLAYELEMENTSTEST_API AMyTestPawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AMyTestPawn();
-	// capsule body todo maybe try blueprintreadwrite
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "body", meta = (AllowPrivateAccess = "true"))
-	class UCapsuleComponent* body;
+	// capsule body
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "body", meta = (AllowPrivateAccess = "true"))
+	class UCapsuleComponent* collisionBody;
+
+	//visible part
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "body", meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* visibleBody;
 
 	// camera components
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* camera;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* boomArm;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float TArmLength;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	FVector sockOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	FRotator RelRotation;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Movement")
+	float PlayerSpeed;
 
 protected:
 	// Called when the game starts or when spawned

@@ -15,10 +15,39 @@ AMyTestPawn::AMyTestPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// set size for the capsule
-	//
-	body = CreateDefaultSubobject<UCapsuleComponent>(TEXT("collisionBody"));
-	body->InitCapsuleSize(42.f, 96.f);
+
+	// set up base values for various variables
+	TArmLength = 300.0f;
+	sockOffset = FVector(0.0f, 0.0f, 75.0f);
+	RelRotation = FRotator(-30.0f, 180.0f, 0.0f);
+
+	// capsule Collision and mesh
+	
+	visibleBody = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("visibleBody"));
+	visibleBody->SetVisibility(true);
+	collisionBody = CreateDefaultSubobject<UCapsuleComponent>(TEXT("collisionBody"));
+	collisionBody->InitCapsuleSize(42.f, 96.f);
+	collisionBody->SetVisibility(true);
+	collisionBody->SetupAttachment(visibleBody);
+	
+
+	// camera bullshit
+	boomArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("boomArm"));
+	boomArm->SetupAttachment(visibleBody);
+
+	// boom arm rotation not affected by player rotation
+	boomArm->SetUsingAbsoluteRotation(true);
+	boomArm->bDoCollisionTest = false;
+	boomArm->TargetArmLength = TArmLength;
+	boomArm->SocketOffset = sockOffset;
+	boomArm->SetRelativeRotation(RelRotation);
+
+	//camera creation
+	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("mainCamera"));
+	camera->SetupAttachment(boomArm, USpringArmComponent::SocketName);
+
+	visibleBody->SetSimulatePhysics(true);
+
 
 
 }
@@ -80,12 +109,21 @@ void AMyTestPawn::CrouchAction(const FInputActionValue& Value)
 {
 	//gets the value, we'll do cool stuff later
 	bool BoolValue = Value.Get<bool>();
+	if (BoolValue)
+	{
+		boomArm->TargetArmLength = 1000.0f;
+	}
+	else {
+		boomArm->TargetArmLength = TArmLength;
+	}
 }
 
 void AMyTestPawn::MoveAction(const FInputActionValue& Value)
 {
 	//gets the value, we'll do cool stuff later
 	FVector2D AxisVal = Value.Get<FVector2D>();
+	AddMovementInput(GetActorForwardVector() * AxisVal.Y*PlayerSpeed);
+	AddMovementInput(GetActorRightVector() * AxisVal.X * PlayerSpeed);
 }
 
 void AMyTestPawn::LookAction(const FInputActionValue& Value)
